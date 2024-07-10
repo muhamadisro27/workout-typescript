@@ -2,12 +2,14 @@ import { prismaClient } from "../app/database";
 import { ResponseError } from "../error/error-response";
 import {
   CreateUserRequest,
+  LoginRequest,
   toUserResponse,
   UserResponse,
 } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import bcrypt from "bcrypt";
+import { v4 as uuid, v4 } from "uuid";
 
 export class UserService {
   static async register(request: CreateUserRequest): Promise<UserResponse> {
@@ -33,5 +35,42 @@ export class UserService {
     });
 
     return toUserResponse(user);
+  }
+
+  static async login(request: LoginRequest): Promise<UserResponse> {
+    const loginRequest = Validation.validate(UserValidation.LOGIN, request);
+
+    let user = await prismaClient.user.findUnique({
+      where: {
+        username: request.username,
+      },
+    });
+
+    if (!user) {
+      throw new ResponseError(401, "User don't match with our records.");
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      request.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      throw new ResponseError(401, "User don't match with our records.");
+    }
+
+    user = await prismaClient.user.update({
+      where: {
+        username: loginRequest.username,
+      },
+      data: {
+        token: uuid(),
+      },
+    });
+
+    const response = toUserResponse(user);
+    response.token = user.token!;
+
+    return response;
   }
 }
