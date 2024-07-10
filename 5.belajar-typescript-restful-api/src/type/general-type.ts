@@ -1,0 +1,1 @@
+export type ArrayMix<T extends any[]> = T
