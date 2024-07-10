@@ -12,10 +12,15 @@ export type CreateUserRequest = {
   password: string;
 };
 
+export type UpdateUserRequest = {
+  name?: string;
+  password?: string;
+};
+
 export type LoginRequest = {
   username: string;
   password: string;
-}
+};
 
 export function toUserResponse(user: User): UserResponse {
   return {
