@@ -1,6 +1,6 @@
 import { prismaClient } from "../src/app/database";
 import bcrypt from "bcrypt";
-import { Contact, User } from "@prisma/client";
+import { Address, Contact, User } from "@prisma/client";
 import { UserResponse } from "../src/model/user-model";
 
 export class UtilTesting {
@@ -38,6 +38,20 @@ export class UtilTesting {
     });
   }
 
+  static async createOneAddress(): Promise<Address> {
+    const contact = await this.getContact();
+    return await prismaClient.address.create({
+      data: {
+        street: "Jl. Unocal",
+        city: "Jakarta Selatan",
+        province: "Jakarta",
+        country: "Indonesia",
+        postalCode: "76141",
+        contactId: contact.id,
+      },
+    });
+  }
+
   static async getCurrentUser(): Promise<User> {
     const user = await prismaClient.user.findFirst({
       where: {
@@ -50,6 +64,26 @@ export class UtilTesting {
     }
 
     return user;
+  }
+
+  static async getAddress(): Promise<Address> {
+    const contact = await this.getContact();
+
+    if (!contact) {
+      throw new Error("Contact not found");
+    }
+
+    const address = await prismaClient.address.findFirst({
+      where: {
+        contactId: contact.id,
+      },
+    });
+
+    if (!address) {
+      throw new Error("Address not found");
+    }
+
+    return address;
   }
 
   static async getContact(): Promise<Contact> {
@@ -72,5 +106,9 @@ export class UtilTesting {
         username: "test",
       },
     });
+  }
+
+  static async removeAddresses() {
+    return await prismaClient.address.deleteMany();
   }
 }

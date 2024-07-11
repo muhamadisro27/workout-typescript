@@ -214,8 +214,6 @@ describe("GET /api/contacts", (): void => {
       .get(`/api/contacts/`)
       .set("X-API-TOKEN", "test");
 
-    logger.error(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.data).toBeDefined();
     expect(result.body.data.length).toBe(1);
@@ -231,8 +229,6 @@ describe("GET /api/contacts", (): void => {
         name: "Is",
       })
       .set("X-API-TOKEN", "test");
-
-    logger.error(result.body);
 
     expect(result.status).toBe(200);
     expect(result.body.data).toBeDefined();
@@ -250,8 +246,6 @@ describe("GET /api/contacts", (): void => {
       })
       .set("X-API-TOKEN", "test");
 
-    logger.error(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.data).toBeDefined();
     expect(result.body.data.length).toBe(1);
@@ -267,8 +261,6 @@ describe("GET /api/contacts", (): void => {
         name: "salah",
       })
       .set("X-API-TOKEN", "test");
-
-    logger.error(result.body);
 
     expect(result.status).toBe(200);
     expect(result.body.data).toBeDefined();
@@ -286,8 +278,6 @@ describe("GET /api/contacts", (): void => {
         size: 1,
       })
       .set("X-API-TOKEN", "test");
-
-    logger.error(result.body);
 
     expect(result.status).toBe(200);
     expect(result.body.data).toBeDefined();
