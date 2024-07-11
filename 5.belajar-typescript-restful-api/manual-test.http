@@ -1,0 +1,12 @@
+### Register User
+
+POST http://localhost:4000/api/users
+
+Accept: application/json
+Content-Type: application/json
+
+{
+      "username": "test",
+      "name": "test user",
+      "password": "rahasia"
+}
